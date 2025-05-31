@@ -1,0 +1,105 @@
+$primary-color: rgb(0,93,255);
+$background-color: rgb(223,230,240);
+
+* {
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+/* Блок управления состоянием progress */
+
+.control-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Блок управления значением прогресса */
+
+.value-block{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.value-input {
+    width: 50px;
+    height: 30px;
+    border-radius: 30%/50%;
+    font-size: 14px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    border: 1px solid #000000;
+}
+
+.value-input::-webkit-inner-spin-button,
+.value-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Блоки управления состоянием animated и hidden */
+
+.animated-block,
+.hidden-block {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.checkbox-animated,
+.checkbox-hidden {
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.switch-animated,
+.switch-hidden {
+    position: relative;
+    display: inline-block;
+
+    width: 50px;
+    height: 30px;
+    border-radius: 30%/50%;
+
+    vertical-align: top;
+    background: $background-color;
+    transition: 0.3s;
+}
+
+.switch-animated::before,
+.switch-hidden::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    border-radius: 50%;
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    background: #ffffff;
+
+    transition: .3s;
+}
+
+.checkbox-animated:checked+.switch-animated::before {
+    left: calc(100% - 28px);
+}
+
+.checkbox-animated:checked+.switch-animated {
+    background-color: $primary-color;
+}
+
+.checkbox-hidden:checked+.switch-hidden::before {
+    left: calc(100% - 28px);
+}
+
+.checkbox-hidden:checked+.switch-hidden {
+    background-color: $primary-color;
+}
