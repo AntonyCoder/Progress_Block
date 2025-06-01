@@ -6,6 +6,14 @@ export default class ProgressBlock {
         this.animated = options.animated || false;
         this.hidden = options.hidden || false;
 
+        this.radius = 40;
+        this.circumference = 2 * Math.PI * this.radius;
+        this.offset = this.circumference * ((100 - this.value) / 100);
+
+        this._setValue = this._setValue.bind(this);
+        this.onHide = this.onHide.bind(this)
+        this.onAnimate = this.onAnimate.bind(this);
+
         this._render();
     }
 
@@ -21,18 +29,59 @@ export default class ProgressBlock {
         blockName.textContent = 'Progress';
 
         //Блок с круговым процессом
-        const progressCircle = document.createElement('div');
-        progressCircle.classList.add('progress-circle');
+        const progressCircle = this._renderProgressCircle();
 
-        const controlBlock = this.renderControlBlock();
+        const controlBlock = this._renderControlBlock();
 
         blockWrapper.append(blockName, progressCircle, controlBlock);
 
         this.container.appendChild(blockWrapper);
     }
 
+    //Создание кругового блока прогресса
+    _renderProgressCircle() {
+        //Обертка блока с круговым процессом
+        const progressCircle = document.createElement('div');
+        progressCircle.classList.add('progress-circle');
+
+        //SVG кольцо прогресс блока 
+        const progressRing = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        progressRing.classList.add('progress-ring');
+        progressRing.setAttribute('width', '100');
+        progressRing.setAttribute('height', '100');
+        progressRing.setAttribute('viewBox', '0 0 100 100');
+
+        if (this.hidden) {
+            progressRing.classList.add('hidden')
+        }
+
+        //Фоновое кольцо
+        const progressRingBg = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+        progressRingBg.classList.add('progress-ring-bg');
+        progressRingBg.setAttribute('r', this.radius);
+        progressRingBg.setAttribute('cx', '50');
+        progressRingBg.setAttribute('cy', '50');
+        progressRingBg.setAttribute('fill', 'transparent');
+
+        //Кольцо с изменяющимся значением
+        const progressRingValue = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+        progressRingValue.classList.add('progress-ring-value');
+        progressRingValue.setAttribute('r', this.radius);
+        progressRingValue.setAttribute('cx', '50');
+        progressRingValue.setAttribute('cy', '50');
+        progressRingValue.setAttribute('fill', 'transparent');
+        progressRingValue.style.strokeDasharray = this.circumference;
+        progressRingValue.style.strokeDashoffset = this.offset;
+
+        progressRing.append(progressRingBg, progressRingValue);
+
+        progressCircle.appendChild(progressRing);
+
+        return progressCircle;
+    }
+
     //Создание блока управления прогрессом
-    renderControlBlock() {
+    _renderControlBlock() {
         //Блок управления прогрессом
         const controlBlock = document.createElement('div');
         controlBlock.classList.add('control-block');
@@ -50,6 +99,7 @@ export default class ProgressBlock {
 
         //Фильтрация input value
         valueInput.addEventListener('input', this._filterNumericInput);
+        valueInput.addEventListener('input', this._setValue);
 
         valueBLock.prepend(valueInput);
 
@@ -63,6 +113,7 @@ export default class ProgressBlock {
         const checkboxAnimated = document.createElement('input');
         checkboxAnimated.classList.add('checkbox-animated');
         checkboxAnimated.type = 'checkbox';
+        checkboxAnimated.checked = this.animated;
 
         //Switch toggle animated
         const switchAnimated = document.createElement('span');
@@ -80,6 +131,9 @@ export default class ProgressBlock {
         const checkboxHidden = document.createElement('input');
         checkboxHidden.classList.add('checkbox-hidden');
         checkboxHidden.type = 'checkbox';
+        checkboxHidden.checked = this.hidden;
+
+        checkboxHidden.addEventListener('click', this.onHide)
 
         //Switch toggle hidden
         const switchHidden = document.createElement('span');
@@ -91,7 +145,7 @@ export default class ProgressBlock {
         return controlBlock;
     }
 
-    //Функция для фильтрации input value
+    //Функция для фильтрации значений input value
     _filterNumericInput(e) {
         let digitsOnly = e.target.value.replace(/[^\d]/g, '');
 
@@ -99,20 +153,50 @@ export default class ProgressBlock {
             e.target.value = 0;
             return;
         }
-        
+
         let value = parseInt(digitsOnly);
 
-        if (value > 100) {
-            value = 100
-        }
-        if (value < 1) {
-            value = 0
-        }
+        if (value > 100) value = 100
+        if (value < 1) value = 0
 
-        e.target.value = value
+        e.target.value = value;
     }
 
+    //Управление состоянием progress block через input value
+    _setValue(e) {
+        this.value = e.target.value;
 
+        this.offset = this.circumference * ((100 - this.value) / 100);
 
+        const progressRingValue = this.container.querySelector('.progress-ring-value');
+
+        progressRingValue.style.strokeDasharray = this.circumference;
+        progressRingValue.style.strokeDashoffset = this.offset;
+    }
+
+    //Обработчик нажатия на переключатель Hide
+    onHide(e) {
+        this.hidden = e.target.checked;
+        const progressRing = this.container.querySelector('.progress-ring');
+        const valueInput = this.container.querySelector('.value-input');
+        const checkboxAnimated = this.container.querySelector('.checkbox-animated');
+        console.log(checkboxAnimated);
+
+        if (this.hidden) {
+            progressRing.classList.add('hidden');
+            valueInput.disabled = true;
+            checkboxAnimated.disabled = true;
+        } else {
+            progressRing.classList.remove('hidden');
+            valueInput.disabled = false;
+            checkboxAnimated.disabled = false;
+        }
+
+    }
+
+    //Обработчик нажатия на переключатель Animate
+    onAnimate() {
+
+    }
 
 }

@@ -1,17 +1,55 @@
-@charset "UTF-8";
 * {
   font-family: sans-serif;
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* Блок управления состоянием progress */
+.block-wrapper {
+  width: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+}
+
+.block-name {
+  align-self: start;
+}
+
+.progress-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  margin: 60px 0 90px;
+  transform: rotate(-90deg);
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+}
+
+.progress-ring-bg {
+  stroke: rgb(223, 230, 240);
+  stroke-width: 7px;
+}
+
+.progress-ring-value {
+  stroke: rgb(0, 93, 255);
+  stroke-width: 7px;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
 .control-block {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
-/* Блок управления значением прогресса */
 .value-block {
   display: flex;
   align-items: center;
@@ -28,13 +66,16 @@
   border: 1px solid #000000;
 }
 
+.value-input:disabled {
+  background: rgb(223, 230, 240);
+}
+
 .value-input::-webkit-inner-spin-button,
 .value-input::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Блоки управления состоянием animated и hidden */
 .animated-block,
 .hidden-block {
   display: flex;
@@ -75,7 +116,7 @@
   width: 26px;
   height: 26px;
   background: #ffffff;
-  transition: 0.3s;
+  transition: 0.15s;
 }
 
 .checkbox-animated:checked + .switch-animated::before {
@@ -92,4 +133,8 @@
 
 .checkbox-hidden:checked + .switch-hidden {
   background-color: rgb(0, 93, 255);
+}
+
+.hidden {
+  display: none;
 }/*# sourceMappingURL=progressBlock.css.map */
