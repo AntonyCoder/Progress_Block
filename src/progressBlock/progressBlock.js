@@ -10,8 +10,8 @@ export default class ProgressBlock {
         this.circumference = 2 * Math.PI * this.radius;
         this.offset = this.circumference * ((100 - this.value) / 100);
 
-        this._onValueInput = this._onValueInput.bind(this);
-        this._onHide = this._onHide.bind(this)
+        this._debouncedOnValueInput = this.debounce(this._onValueInput.bind(this), 400);
+        this._onHide = this._onHide.bind(this);
         this._onAnimate = this._onAnimate.bind(this);
 
         this._render();
@@ -95,7 +95,7 @@ export default class ProgressBlock {
 
         //Фильтрация input value
         valueInput.addEventListener('input', this._filterNumericInput);
-        valueInput.addEventListener('input', this._onValueInput);
+        valueInput.addEventListener('input', this._debouncedOnValueInput);
 
         valueBLock.prepend(valueInput);
 
@@ -231,5 +231,14 @@ export default class ProgressBlock {
             checkboxAnimated.disabled = false;
             checkboxHidden.checked = false;
         }
+    }
+
+    //Функция debounce
+    debounce(func, delay = 400) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
     }
 }
