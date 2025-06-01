@@ -33,6 +33,19 @@
   height: 100%;
 }
 
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.progress-ring-value.animated {
+  animation: rotate var(--rotate-duration, 2s) linear infinite;
+  transform-origin: 50% 50%;
+}
+
 .progress-ring-bg {
   stroke: rgb(223, 230, 240);
   stroke-width: 7px;
@@ -60,7 +73,7 @@
   width: 50px;
   height: 30px;
   border-radius: 30%/50%;
-  font-size: 14px;
+  font-size: 15px;
   text-align: center;
   vertical-align: middle;
   border: 1px solid #000000;
@@ -68,6 +81,11 @@
 
 .value-input:disabled {
   background: rgb(223, 230, 240);
+}
+
+.value-input:focus {
+  border: 1px solid rgb(0, 93, 255);
+  outline: none;
 }
 
 .value-input::-webkit-inner-spin-button,
@@ -135,6 +153,21 @@
   background-color: rgb(0, 93, 255);
 }
 
+.checkbox-animated:disabled + .switch-animated {
+  filter: grayscale(70%);
+}
+
 .hidden {
   display: none;
+}
+
+@media (orientation: landscape) {
+  .block-wrapper {
+    flex-direction: row;
+    width: 568px;
+    height: 320px;
+  }
+  .progress-circle {
+    margin: 0 80px 0 30px;
+  }
 }/*# sourceMappingURL=progressBlock.css.map */
