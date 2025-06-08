@@ -3,7 +3,7 @@ export default class ProgressBlock {
         if (!(container instanceof HTMLElement)) {
             throw new Error('This is not HTML element!');
         }
-        
+
         this.container = container;
         this.value = 0;
         this.hide = false;
@@ -40,6 +40,8 @@ export default class ProgressBlock {
         blockWrapper.append(blockName, progressCircle, controlBlock);
 
         this.container.appendChild(blockWrapper);
+
+        this.valueInput = this.container.querySelector('.value-input');
     }
 
     //Создание кругового блока прогресса
@@ -184,8 +186,7 @@ export default class ProgressBlock {
     //API для управления состоянием progress блока
     //Метод для управления состоянием блока путем изменения значения value
     setValue(value) {
-        const valueInput = this.container.querySelector('.value-input');
-        valueInput.value = value;
+        this.valueInput.value = value;
 
         this.offset = this.circumference * ((100 - value) / 100);
 
