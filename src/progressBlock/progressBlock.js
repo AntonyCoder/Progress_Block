@@ -1,10 +1,14 @@
 export default class ProgressBlock {
     constructor(container) {
+        if (!(container instanceof HTMLElement)) {
+            throw new Error('This is not HTML element!');
+        }
+        
         this.container = container;
         this.value = 0;
         this.hide = false;
         this.animate = false;
-        this.periodMs = 2000
+        this.periodMs = 2000;
 
         this.radius = 40;
         this.circumference = 2 * Math.PI * this.radius;
